@@ -1,4 +1,4 @@
-const baseUrl = getApp().globalData.baseUrl;
+const baseUrl = 'http://localhost:3000';
 
 const request = (url, data = {}, method = 'POST') => {
   return new Promise((resolve, reject) => {

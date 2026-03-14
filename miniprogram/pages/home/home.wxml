@@ -1,8 +1,189 @@
 <view class="container">
-  <view class="info">当前账号：{{userInfo.account}}</view>
-  <view class="form">
-    <input placeholder="输入老师发放的临时口令" bindinput="onPasscodeInput" value="{{passcode}}" />
-    <button type="primary" bindtap="checkPasscode">立即签到</button>
+  <!-- 顶部信息 -->
+  <view class="header">
+    <view class="user-info">
+      <text class="name">{{userInfo.name}}</text>
+      <text class="role-badge {{userInfo.role}}">{{roleText}}</text>
+    </view>
+    <view class="logout" bindtap="logout">退出</view>
   </view>
-  <button open-type="exit" type="warn" bindtap="logout">退出登录</button>
+
+  <!-- 辅导员：班级管理 -->
+  <block wx:if="{{isCounselor}}">
+    <view class="card">
+      <view class="card-title">班级管理</view>
+      <view class="card-content">
+        <view class="class-list">
+          <view class="class-item" wx:for="{{classes}}" wx:key="classId" wx:for-item="cls">
+            <view class="class-info" bindtap="selectClass" data-classid="{{cls.classId}}">
+              <text class="class-name">班级: {{cls.classId}}</text>
+              <text class="class-stats">学生{{cls.studentCount}}人 / 班长{{cls.adminCount}}人</text>
+            </view>
+            <text class="class-delete" bindtap="deleteClass" data-classid="{{cls.classId}}">删除</text>
+          </view>
+          <view wx:if="{{classes.length === 0}}" class="empty">暂无班级</view>
+        </view>
+        <button class="btn-success" bindtap="createClass">创建班级</button>
+      </view>
+    </view>
+
+    <!-- 辅导员选择班级后显示的功能 -->
+    <block wx:if="{{classId}}">
+      <view class="card">
+        <view class="card-title">发布口令 - {{classId}}</view>
+        <view class="card-content">
+          <input class="input" placeholder="输入口令" bindinput="onPasscodeInput" value="{{passcode}}" />
+          <view class="location-row">
+            <switch checked="{{withLocation}}" bindchange="onLocationChange" />
+            <text>同时获取位置</text>
+          </view>
+          <button class="btn-primary" bindtap="publishPasscode">发布口令</button>
+        </view>
+      </view>
+
+      <view class="card" wx:if="{{currentPasscode.passcode}}">
+        <view class="card-title">当前口令状态</view>
+        <view class="card-content">
+          <view class="status-item"><text class="label">口令：</text><text class="value">{{currentPasscode.passcode}}</text></view>
+          <view class="status-item" wx:if="{{currentPasscode.latitude}}"><text class="label">位置：</text><text class="value">已获取</text></view>
+          <view class="status-item"><text class="label">发布时间：</text><text class="value">{{publishTimeText}}</text></view>
+          <view class="status-item"><text class="label">已签到：</text><text class="value">{{attendanceCount}}人</text></view>
+          <button class="btn-danger" bindtap="clearPasscode">清除口令</button>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title">账号管理 - {{classId}}</view>
+        <view class="card-content">
+          <view class="account-list">
+            <view class="account-item header">
+              <text>账号</text><text>姓名</text><text>身份</text><text>操作</text>
+            </view>
+            <scroll-view scroll-y class="account-scroll">
+              <view class="account-item" wx:for="{{accounts}}" wx:key="account">
+                <text>{{item.account}}</text>
+                <text>{{item.name}}</text>
+                <text class="role-tag {{item.role}}">{{item.role === 'admin' ? '管理员' : '学生'}}</text>
+                <view class="actions">
+                  <text class="action-edit" bindtap="editAccount" data-index="{{index}}">编辑</text>
+                  <text class="action-delete" bindtap="deleteAccount" data-index="{{index}}">删除</text>
+                </view>
+              </view>
+            </scroll-view>
+          </view>
+          <button class="btn-success" bindtap="showAddAccount">添加账号</button>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title">签到名单</view>
+        <view class="card-content">
+          <view class="attendance-list">
+            <view class="attendance-item header">
+              <text>姓名</text><text>账号</text><text>时间</text>
+            </view>
+            <scroll-view scroll-y class="attendance-scroll">
+              <view class="attendance-item" wx:for="{{attendanceList}}" wx:key="account">
+                <text>{{item.name}}</text><text>{{item.account}}</text><text>{{item.time}}</text>
+              </view>
+              <view wx:if="{{attendanceList.length === 0}}" class="empty">暂无签到记录</view>
+            </scroll-view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+
+  <!-- 管理员/学生：显示所在班级 -->
+  <block wx:if="{{!isCounselor && classId}}">
+    <view class="card">
+      <view class="card-title">我的班级: {{classId}}</view>
+    </view>
+
+    <!-- 管理员：发布口令 -->
+    <block wx:if="{{isAdmin}}">
+      <view class="card">
+        <view class="card-title">发布口令</view>
+        <view class="card-content">
+          <input class="input" placeholder="输入口令" bindinput="onPasscodeInput" value="{{passcode}}" />
+          <view class="location-row">
+            <switch checked="{{withLocation}}" bindchange="onLocationChange" />
+            <text>同时获取位置</text>
+          </view>
+          <button class="btn-primary" bindtap="publishPasscode">发布口令</button>
+        </view>
+      </view>
+
+      <view class="card" wx:if="{{currentPasscode.passcode}}">
+        <view class="card-title">当前口令状态</view>
+        <view class="card-content">
+          <view class="status-item"><text class="label">口令：</text><text class="value">{{currentPasscode.passcode}}</text></view>
+          <view class="status-item" wx:if="{{currentPasscode.latitude}}"><text class="label">位置：</text><text class="value">已获取</text></view>
+          <view class="status-item"><text class="label">发布时间：</text><text class="value">{{publishTimeText}}</text></view>
+          <view class="status-item"><text class="label">已签到：</text><text class="value">{{attendanceCount}}人</text></view>
+          <button class="btn-danger" bindtap="clearPasscode">清除口令</button>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title">签到名单</view>
+        <view class="card-content">
+          <view class="attendance-list">
+            <view class="attendance-item header">
+              <text>姓名</text><text>账号</text><text>时间</text>
+            </view>
+            <scroll-view scroll-y class="attendance-scroll">
+              <view class="attendance-item" wx:for="{{attendanceList}}" wx:key="account">
+                <text>{{item.name}}</text><text>{{item.account}}</text><text>{{item.time}}</text>
+              </view>
+              <view wx:if="{{attendanceList.length === 0}}" class="empty">暂无签到记录</view>
+            </scroll-view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 学生：签到 -->
+    <block wx:if="{{userInfo.role === 'student'}}">
+      <view class="card">
+        <view class="card-title">签到</view>
+        <view class="card-content">
+          <input class="input" placeholder="输入口令签到" bindinput="onPasscodeInput" value="{{passcode}}" />
+          <button class="btn-primary" bindtap="checkIn">立即签到</button>
+        </view>
+      </view>
+
+      <view class="card" wx:if="{{currentPasscode.passcode}}">
+        <view class="card-title">当前签到状态</view>
+        <view class="card-content">
+          <view class="status-item"><text class="label">口令：</text><text class="value">{{currentPasscode.passcode}}</text></view>
+          <view class="status-item">
+            <text class="label">状态：</text>
+            <text class="value {{hasCheckedIn ? 'success' : 'warning'}}">{{hasCheckedIn ? '已签到' : '未签到'}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+</view>
+
+<!-- 添加/编辑账号弹窗 -->
+<view class="modal" wx:if="{{showAccountModal}}">
+  <view class="modal-mask" bindtap="hideAccountModal"></view>
+  <view class="modal-content">
+    <view class="modal-title">{{editingAccount !== null ? '编辑账号' : '添加账号'}}</view>
+    <input class="modal-input" placeholder="账号" disabled="{{editingAccount !== null}}" bindinput="onModalAccountInput" value="{{modalAccount}}" />
+    <input class="modal-input" placeholder="姓名" bindinput="onModalNameInput" value="{{modalName}}" />
+    <input class="modal-input" password placeholder="密码{{editingAccount !== null ? '（不修改则留空）' : ''}}" bindinput="onModalPasswordInput" value="{{modalPassword}}" />
+    <view class="modal-role">
+      <text>身份：</text>
+      <picker bindchange="onRoleChange" value="{{modalRoleIndex}}" range="{{roleOptions}}">
+        <view class="picker">{{roleOptions[modalRoleIndex]}}</view>
+      </picker>
+    </view>
+    <view class="modal-actions">
+      <button bindtap="hideAccountModal">取消</button>
+      <button class="btn-primary" bindtap="saveAccount">保存</button>
+    </view>
+  </view>
 </view>

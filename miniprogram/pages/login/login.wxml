@@ -1,7 +1,33 @@
 <view class="container">
+  <view class="title">课堂考勤系统</view>
+
+  <!-- 身份选择 -->
+  <view class="role-selector">
+    <view class="role-title">选择身份</view>
+    <view class="role-options">
+      <view class="role-item {{role==='counselor'?'active':''}}" bindtap="selectRole" data-role="counselor">
+        辅导员
+      </view>
+      <view class="role-item {{role==='admin'?'active':''}}" bindtap="selectRole" data-role="admin">
+        管理员
+      </view>
+      <view class="role-item {{role==='student'?'active':''}}" bindtap="selectRole" data-role="student">
+        学生
+      </view>
+    </view>
+  </view>
+
+  <!-- 登录表单 -->
   <view class="form">
-    <input placeholder="输入账号（学号）" bindinput="onAccountInput" value="{{account}}" />
-    <input placeholder="输入密码" password bindinput="onPasswordInput" value="{{password}}" />
-    <button type="primary" bindtap="login">登录</button>
+    <input class="input" placeholder="输入账号" bindinput="onAccountInput" value="{{account}}" />
+    <input class="input" password placeholder="输入密码" bindinput="onPasswordInput" value="{{password}}" />
+    <button class="btn-primary" bindtap="login">登录</button>
+  </view>
+
+  <!-- 提示信息 -->
+  <view class="tip">
+    <text wx:if="{{role==='counselor'}}">辅导员：可管理账号、发布口令</text>
+    <text wx elif="{{role==='admin'}}">管理员：可发布口令、位置</text>
+    <text wx else>学生：输入口令快速签到</text>
   </view>
 </view>

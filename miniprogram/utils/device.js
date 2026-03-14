@@ -3,7 +3,7 @@ const generateDeviceId = () => {
   if (deviceId) return deviceId;
 
   const info = wx.getDeviceInfo();
-  const hardware = `\( {info.brand || 'Unknown'}| \){info.model || 'Unknown'}|\( {info.system || 'Unknown'}| \){info.platform || 'Unknown'}`;
+  const hardware = `${info.brand}|${info.model}|${info.system}|${info.platform}`;
   const randomPart = 'dev_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
 
   deviceId = hardware + '|' + randomPart;

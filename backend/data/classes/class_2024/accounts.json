@@ -1,0 +1,42 @@
+[
+  {
+    "account": "admin001",
+    "password": "admin123",
+    "name": "班长A",
+    "role": "admin",
+    "deviceId": "",
+    "todayDeviceId": ""
+  },
+  {
+    "account": "admin002",
+    "password": "admin123",
+    "name": "班长B",
+    "role": "admin",
+    "deviceId": "",
+    "todayDeviceId": ""
+  },
+  {
+    "account": "2023001",
+    "password": "123456",
+    "name": "张三",
+    "role": "student",
+    "deviceId": "",
+    "todayDeviceId": ""
+  },
+  {
+    "account": "2023002",
+    "password": "123456",
+    "name": "李四",
+    "role": "student",
+    "deviceId": "",
+    "todayDeviceId": ""
+  },
+  {
+    "account": "2023003",
+    "password": "123456",
+    "name": "王五",
+    "role": "student",
+    "deviceId": "",
+    "todayDeviceId": ""
+  }
+]

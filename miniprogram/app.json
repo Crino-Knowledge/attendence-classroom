@@ -9,6 +9,14 @@
     "navigationBarTitleText": "课堂考勤",
     "navigationBarTextStyle": "white"
   },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于签到时验证您的位置，确保在允许范围内"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation"
+  ],
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

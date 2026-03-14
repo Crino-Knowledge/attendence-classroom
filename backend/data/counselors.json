@@ -1,0 +1,10 @@
+[
+  {
+    "account": "counselor",
+    "password": "counsel123",
+    "name": "辅导员",
+    "deviceId": "",
+    "todayDeviceId": "",
+    "role": "counselor"
+  }
+]

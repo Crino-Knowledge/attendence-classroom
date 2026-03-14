@@ -1,0 +1,4 @@
+[
+  { "account": "2024001", "password": "888888", "name": "赵六", "role": "student", "deviceId": "", "todayDeviceId": "" },
+  { "account": "2024002", "password": "888888", "name": "钱七", "role": "student", "deviceId": "", "todayDeviceId": "" }
+]
