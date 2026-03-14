@@ -1,0 +1,7 @@
+<view class="container">
+  <view class="form">
+    <input placeholder="输入账号（学号）" bindinput="onAccountInput" value="{{account}}" />
+    <input placeholder="输入密码" password bindinput="onPasswordInput" value="{{password}}" />
+    <button type="primary" bindtap="login">登录</button>
+  </view>
+</view>

@@ -1,0 +1,8 @@
+<view class="container">
+  <view class="info">当前账号：{{userInfo.account}}</view>
+  <view class="form">
+    <input placeholder="输入老师发放的临时口令" bindinput="onPasscodeInput" value="{{passcode}}" />
+    <button type="primary" bindtap="checkPasscode">立即签到</button>
+  </view>
+  <button open-type="exit" type="warn" bindtap="logout">退出登录</button>
+</view>

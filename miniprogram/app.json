@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/home/home"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1E88E5",
+    "navigationBarTitleText": "课堂考勤",
+    "navigationBarTextStyle": "white"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
